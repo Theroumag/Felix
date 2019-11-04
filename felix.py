@@ -1,4 +1,4 @@
-import discord
+import discord, json
 from discord.ext import commands
 from discord.utils import get
 
@@ -44,14 +44,22 @@ club_stock_value = {
 
 # Return info about stocks
 @client.command()
-async def info(ctx):
+async def update(ctx):
     for member in ctx.guild.members:
         for role in member.roles:
             for club, id_num in club_roles.items():
                 if role.id == id_num:
                     club_stock_value[club] += 1
 
-    async.ctx.send(club_stock_value)
+    async ctx.send(club_stock_value)
+    with open('market.json', 'w') as f:
+        json.dump(club_stock_value, f)
+
+# Return info about stock fluctuations
+@client.command()
+async def market(ctx):
+    with open("market.json") as f:
+        async ctx.send(json.loads(f.read()))
 
 
 client.run(token)
