@@ -7,7 +7,7 @@ with open("token.txt", "r") as f: token = f.read()
 
 @client.event
 async def on_ready():
-    print("Felix online")
+    print("Stonks time")
     await client.change_presence(activity=discord.Activity(name="Monitoring stocks"))
     client.help_command = commands.DefaultHelpCommand(no_category='Commands')
 
