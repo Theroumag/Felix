@@ -33,17 +33,16 @@ async def on_ready():
 
 @client.command()
 async def update(ctx):
-    for role in ctx.author.roles:
-        if role.permissions.administrator:
-            await ctx.send("```This may take a while```")
-            for member in ctx.author.guild:
-                for role in member.roles:
-                    for club, id_num in club_ids.items():
-                        if role.id == id_num:
-                            club_stock_values[club] += 1
+    if (ctx.message.author.server_permissions.administrator) or (ctx.guild.owner.mention == ctx.author.mention):
+        await ctx.send("This *may* take a while```")
+        for member in ctx.author.guild:
+            for role in member.roles:
+                for club, id_num in club_ids.items():
+                    if role.id == id_num:
+                        club_stock_values[club] += 1
 
-            with open('market.json', 'w') as f:
-                json.dump(club_stock_values, f)
+        with open('market.json', 'w') as f:
+            json.dump(club_stock_values, f)
 
     await ctx.send(f"```{club_stock_values}```")
 
@@ -52,9 +51,7 @@ async def fetch(ctx, club):
     if club in club_roles.keys():
         await ctx.send(f"The current market value of {club} is ``{club_stock_values[club]}``")
     else:
-        await ctx.send(f"No club called {club} found. Please be careful to type the exact name of the desired club.")
-
-
+        await ctx.send(f"No club called '{club}' found. Be careful to type the exact name of the club, including 'Club' at the end")
 
 
 client.run(token)
