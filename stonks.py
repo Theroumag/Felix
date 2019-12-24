@@ -3,7 +3,7 @@ from datetime import datetime
 from discord.ext import commands
 from discord.utils import get
 
-# NadekoBot.db Path & Sqlite3 connection
+# NadekoBot.db Path & Sqlite3 connectiong
 path = r"C:\path\to\your\nadeko\database\NadekoBot.db"
 conn = sqlite3.connect(path)
 c = conn.cursor()
@@ -53,25 +53,32 @@ async def on_voice_state_update(member, before, after):
 
         if str(before.channel) == channel_to_moniter:
             if str(after.channel) != channel_to_moniter:
-                minutes_participating = round((time.time() - vc_time_joined[member.name])/60)
-                c.execute(f"UPDATE DiscordUser SET CurrencyAmount = CurrencyAmount + {minutes_participating} WHERE Username = '{member.name.split("#")[0]}'")
-                conn.commit()
+                if member.name in vc_time_joined.keys():
+                    minutes_participating = round((time.time() - vc_time_joined[member.name])/60)
+                    c.execute(f'UPDATE DiscordUser SET CurrencyAmount = CurrencyAmount + {minutes_participating} WHERE Username = \'{member.name.split("#")[0]}\'')
+                    conn.commit()
 
-# Be able to do $moniter channel1 $moniter channel2
 @client.command()
 async def monitor(ctx, channel):
     global monitoring
     global channel_to_moniter
-    if channel_to_moniter == "off":
-        channel_to_moniter = ""
-        monitoring = False
-    else:
-        channel_to_moniter = channel
-        monitoring = True
+    valid = False
+    channels = await ctx.guild.fetch_channels()
+    for guild_channel in channels:
+        if channel == str(guild_channel):
+            valid = True
+    if valid == False:
+        await ctx.send(f"{channel} is not a valid voice channel")
 
-    channel_to_moniter = channel
-    command_channel = ctx
-    await ctx.send(f"People will have to connect after I have begun monitoring for their presence to be recognized")
+    else:
+        if channel == "off":
+            channel_to_moniter = ""
+            monitoring = False
+
+        else:
+            channel_to_moniter = channel
+            monitoring = True
+            await ctx.send(f"People will have to connect after I have begun monitoring for their presence to be recognized")
 
 # Untested
 @client.command()
