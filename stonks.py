@@ -54,7 +54,7 @@ async def on_voice_state_update(member, before, after):
         if str(before.channel) == channel_to_moniter:
             if str(after.channel) != channel_to_moniter:
                 minutes_participating = round((time.time() - vc_time_joined[member.name])/60)
-                c.execute(f"UPDATE DiscordUser SET CurrencyAmount = CurrencyAmount + {minutes_participating} WHERE Username = {member.name.split("#")[0]}")
+                c.execute(f"UPDATE DiscordUser SET CurrencyAmount = CurrencyAmount + {minutes_participating} WHERE Username = '{member.name.split("#")[0]}'")
                 conn.commit()
 
 # Be able to do $moniter channel1 $moniter channel2
