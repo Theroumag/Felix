@@ -31,7 +31,6 @@ with open("market.json", "r") as f:
 # Monitoring Voice Channel
 monitoring = False
 vc_time_joined = {}
-vc_time_spent = {}
 channel_to_moniter = ""
 
 @client.event
