@@ -4,8 +4,7 @@ from discord.ext import commands
 from discord.utils import get
 
 # NadekoBot.db Path & Sqlite3 connection
-# path = r"C:\path\to\your\nadeko\database\NadekoBot.db"
-path = r"C:\Users\Nataliya\Desktop\NadekoInstaller\NadekoBot\src\NadekoBot\bin\Release\netcoreapp2.1\data\NadekoBot.db"
+path = r"C:\path\to\your\nadeko\database\NadekoBot.db"
 conn = sqlite3.connect(path)
 c = conn.cursor()
 
@@ -20,7 +19,7 @@ with open('club_info.json', 'r') as f:
 # Club: Role Id dict
 club_ids = {}
 for guild in client.guilds:
-    if guild.name == "stonks":
+    if guild.name == "Intellectualist":
         for role in guild.roles:
             if role.name in club_roles.values():
                 club_ids[role.name] = role.id
@@ -56,7 +55,7 @@ async def on_voice_state_update(member, before, after):
         if str(before.channel) == channel_to_moniter:
             if str(after.channel) != channel_to_moniter:
                 minutes_participating = round((time.time() - vc_time_joined[member.name])/60)
-                c.execute(f"""UPDATE DiscordUser SET CurrencyAmount = CurrencyAmount + {minutes_participating} WHERE Username = {member.name.split("#")[0]}""")
+                c.execute(f"UPDATE DiscordUser SET CurrencyAmount = CurrencyAmount + {minutes_participating} WHERE Username = {member.name.split("#")[0]}")
                 conn.commit()
 
 # Be able to do $moniter channel1 $moniter channel2
